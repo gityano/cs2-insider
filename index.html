@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS2 Insider — Новости CS2 и киберспорта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --bg3: #1a1a25;
+  --accent: #ff6b35;
+  --accent2: #00d4ff;
+  --text: #f0f0f0;
+  --text2: #9090a0;
+  --border: #2a2a3a;
+  --gradient: linear-gradient(135deg, var(--accent), #ff2d55, var(--accent2));
+  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+/* Navigation */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:1000;
+  background: rgba(10,10,15,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: transform 0.3s;
+}
+.nav-inner {
+  max-width: 1280px; margin:0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 64px;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 22px; font-weight: 800;
+  text-decoration: none; color: var(--text);
+}
+.nav-logo i { color: var(--accent); font-size: 28px; }
+.nav-logo span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.nav-links { display: flex; gap: 24px; list-style: none; }
+.nav-links a {
+  text-decoration: none; color: var(--text2);
+  font-size: 14px; font-weight: 500; transition: color 0.3s;
+  position: relative; padding: 4px 0;
+}
+.nav-links a::after {
+  content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px;
+  background: var(--gradient); transition: width 0.3s; border-radius: 2px;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links a:hover::after { width: 100%; }
+.nav-search { display: flex; align-items: center; gap: 8px; }
+.nav-search input {
+  background: var(--bg3); border:1px solid var(--border);
+  border-radius: 8px; padding: 8px 16px;
+  color: var(--text); font-size: 13px; width: 200px;
+  outline: none; transition: border-color 0.3s;
+}
+.nav-search input:focus { border-color: var(--accent); }
+.nav-toggle { display: none; background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
+
+/* Hero */
+.hero {
+  margin-top: 64px;
+  position: relative;
+  min-height: 70vh;
+  display: flex; align-items: flex-end;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset:0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%230a0a0f" width="1200" height="800"/><circle cx="200" cy="400" r="300" fill="%23ff6b35" opacity="0.06"/><circle cx="900" cy="300" r="250" fill="%2300d4ff" opacity="0.05"/><circle cx="600" cy="700" r="400" fill="%23ff2d55" opacity="0.04"/></svg>') center/cover no-repeat;
+  z-index:0;
+}
+.hero-overlay {
+  position: absolute; inset:0;
+  background: linear-gradient(to top, var(--bg) 0%, transparent 50%, transparent 100%);
+  z-index:1;
+}
+.hero-content {
+  position: relative; z-index:2;
+  max-width: 1280px; margin:0 auto;
+  padding: 60px 24px 80px;
+  width: 100%;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #fff;
+  padding: 6px 16px; border-radius: 20px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+.hero-badge i { font-size: 14px; }
+.hero h1 {
+  font-size: clamp(32px, 6vw, 64px);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  max-width: 800px;
+}
+.hero h1 .highlight { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero p {
+  color: var(--text2);
+  font-size: 18px;
+  max-width: 600px;
+  margin-bottom: 32px;
+}
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 12px;
+  font-size: 14px; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+.btn-primary {
+  background: var(--gradient); color: #fff;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,107,53,0.3); }
+.btn-secondary {
+  background: var(--bg3); color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--border); transform: translateY(-2px); }
+
+/* Breaking News Ticker */
+.ticker {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  padding: 12px 0;
+}
+.ticker-inner {
+  max-width: 1280px; margin:0 auto; padding:0 24px;
+  display: flex; align-items: center; gap: 24px;
+}
+.ticker-label {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #fff;
+  padding: 4px 14px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  white-space: nowrap;
+  animation: pulse-label 2s infinite;
+}
+@keyframes pulse-label {
+  0%, 100% { opacity:1; }
+  50% { opacity:0.7; }
+}
+.ticker-wrap { overflow: hidden; flex:1; }
+.ticker-track {
+  display: flex; gap: 48px;
+  animation: ticker-scroll 30s linear infinite;
+  width: max-content;
+}
+.ticker-track span {
+  white-space: nowrap;
+  font-size: 14px; color: var(--text2);
+}
+.ticker-track span strong { color: var(--text); font-weight: 500; }
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Sections */
+.section {
+  max-width: 1280px; margin:0 auto; padding: 64px 24px;
+}
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 32px;
+}
+.section-header h2 {
+  font-size: 28px; font-weight: 800;
+}
+.section-header h2 i { color: var(--accent); margin-right: 12px; }
+.section-link {
+  color: var(--accent); text-decoration: none;
+  font-size: 14px; font-weight: 600;
+  display: flex; align-items: center; gap: 6px;
+  transition: gap 0.3s;
+}
+.section-link:hover { gap: 10px; }
+
+/* News Grid */
+.news-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+.featured-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg3);
+  transition: transform 0.3s;
+  cursor: pointer;
+  min-height: 400px;
+}
+.featured-card:hover { transform: translateY(-4px); }
+.featured-card .card-img {
+  width: 100%; height: 100%;
+  background: var(--gradient);
+  opacity: 0.3;
+  position: absolute; inset:0;
+}
+.featured-card .card-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  mix-blend-mode: overlay;
+}
+.featured-card .card-body {
+  position: absolute; bottom:0; left:0; right:0;
+  padding: 32px;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
+}
+.featured-card .card-tag {
+  display: inline-block;
+  background: var(--accent); color: #fff;
+  padding: 4px 12px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.featured-card h3 {
+  font-size: 24px; font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.featured-card .card-meta {
+  color: var(--text2); font-size: 13px;
+  display: flex; gap: 16px;
+}
+.side-news { display: flex; flex-direction: column; gap: 16px; }
+.side-news-item {
+  display: flex; gap: 16px;
+  background: var(--bg3);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.side-news-item:hover { background: var(--bg2); transform: translateX(-4px); }
+.side-news-item .side-img {
+  width: 80px; height: 80px; border-radius: 8px; flex-shrink:0;
+  background: var(--gradient);
+  opacity: 0.3;
+}
+.side-news-item .side-content { flex:1; min-width:0; }
+.side-news-item .side-tag {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 4px;
+}
+.side-news-item h4 {
+  font-size: 14px; font-weight: 600;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+.side-news-item .side-meta {
+  font-size: 12px; color: var(--text2);
+}
+
+/* Matches */
+.matches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+.match-card {
+  background: var(--bg3);
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.match-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.match-card .match-status {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 12px;
+}
+.match-card .match-status.live { color: #ff2d55; animation: pulse-label 1.5s infinite; }
+.match-teams {
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px; margin-bottom: 12px;
+}
+.match-team {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; font-size: 13px; font-weight: 600;
+}
+.match-team .team-icon {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--bg2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 800; color: var(--accent);
+}
+.match-vs {
+  font-size: 14px; font-weight: 800; color: var(--text2);
+}
+.match-score {
+  font-size: 13px; color: var(--text2);
+}
+.match-league {
+  font-size: 12px; color: var(--text2);
+  margin-top: 8px;
+}
+
+/* Teams Section */
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+.team-card {
+  background: var(--bg3);
+  border-radius: 14px;
+  padding: 24px 16px;
+  text-align: center;
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.team-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.team-card .team-rank {
+  font-size: 11px; font-weight: 700; color: var(--text2);
+  margin-bottom: 8px;
+}
+.team-card .team-icon-lg {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--bg2); margin:0 auto 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 800; color: var(--accent);
+}
+.team-card h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.team-card .team-country {
+  font-size: 12px; color: var(--text2);
+}
+
+/* Filter Buttons */
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+.filter-btn {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text2); padding: 8px 20px;
+  border-radius: 20px; font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.3s;
+}
+.filter-btn:hover, .filter-btn.active {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+
+/* News Cards Grid (for additional news) */
+.news-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+.news-card-item {
+  background: var(--bg3);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.news-card-item:hover { transform: translateY(-4px); border-color: var(--accent); }
+.news-card-item .nc-img {
+  height: 180px;
+  background: var(--gradient);
+  opacity: 0.2;
+}
+.news-card-item .nc-body { padding: 20px; }
+.news-card-item .nc-tag {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 8px;
+}
+.news-card-item h4 {
+  font-size: 16px; font-weight: 700;
+  margin-bottom: 8px; line-height: 1.3;
+}
+.news-card-item p {
+  font-size: 13px; color: var(--text2);
+  margin-bottom: 12px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.news-card-item .nc-meta {
+  font-size: 12px; color: var(--text2);
+  display: flex; justify-content: space-between;
+}
+
+/* Footer */
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 48px 24px 24px;
+  margin-top: 64px;
+}
+.footer-inner {
+  max-width: 1280px; margin:0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+}
+.footer-brand h3 {
+  font-size: 20px; font-weight: 800;
+  margin-bottom: 12px;
+}
+.footer-brand h3 i { color: var(--accent); }
+.footer-brand p { color: var(--text2); font-size: 13px; max-width: 300px; }
+.footer-col h4 {
+  font-size: 14px; font-weight: 700; text-transform: uppercase;
+  margin-bottom: 16px; color: var(--text);
+}
+.footer-col a {
+  display: block; color: var(--text2); text-decoration: none;
+  font-size: 13px; margin-bottom: 8px;
+  transition: color 0.3s;
+}
+.footer-col a:hover { color: var(--accent); }
+.footer-bottom {
+  max-width: 1280px; margin:32px auto 0;
+  padding-top: 24px; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between;
+  font-size: 13px; color: var(--text2);
+}
+.footer-socials { display: flex; gap: 12px; }
+.footer-socials a {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--bg3); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text2); text-decoration: none;
+  transition: all 0.3s;
+}
+.footer-socials a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* Loader */
+.loader {
+  display: flex; justify-content: center; align-items: center;
+  padding: 40px; gap: 8px;
+}
+.loader span {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent);
+  animation: bounce 0.6s infinite alternate;
+}
+.loader span:nth-child(2) { animation-delay: 0.2s; }
+.loader span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce {
+  to { transform: translateY(-16px); opacity: 0.5; }
+}
+
+/* Scroll to top */
+.scroll-top {
+  position: fixed; bottom: 24px; right: 24px;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--accent); color: #fff;
+  border: none; cursor: pointer;
+  font-size: 20px; display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: all 0.3s; z-index: 999;
+  box-shadow: 0 4px 20px rgba(255,107,53,0.3);
+}
+.scroll-top.visible { opacity: 1; visibility: visible; }
+.scroll-top:hover { transform: translateY(-4px); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .news-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .nav-links { display: none; }
+  .nav-search input { width: 140px; }
+  .nav-toggle { display: block; }
+  .nav-open .nav-links {
+    display: flex; flex-direction: column;
+    position: absolute; top: 64px; left:0; right:0;
+    background: rgba(10,10,15,0.95);
+    backdrop-filter: blur(20px);
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+}
+@media (max-width: 600px) {
+  .section { padding: 40px 16px; }
+  .hero-content { padding: 40px 16px 60px; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .matches-grid { grid-template-columns: 1fr; }
+  .news-cards-grid { grid-template-columns: 1fr; }
+  .teams-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero h1 { font-size: 28px; }
+}
+
+/* Animations on scroll */
+.fade-in {
+  opacity: 0; transform: translateY(30px);
+  transition: all 0.6s ease;
+}
+.fade-in.visible {
+  opacity: 1; transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <i class="fas fa-crosshairs"></i>
+      <span>CS2 Insider</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#news">Новости</a></li>
+      <li><a href="#matches">Матчи</a></li>
+      <li><a href="#teams">Команды</a></li>
+      <li><a href="#tournaments">Турниры</a></li>
+    </ul>
+    <div class="nav-search">
+      <input type="text" placeholder="Поиск новостей..." id="searchInput">
+    </div>
+    <button class="nav-toggle" id="navToggle"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><i class="fas fa-bolt"></i> LIVE</div>
+    <h1>Все свежие новости <br><span class="highlight">CS2 и киберспорта</span></h1>
+    <p>Следите за последними событиями в мире Counter-Strike 2: турниры, команды, обновления и эксклюзивные репортажи.</p>
+    <div class="hero-actions">
+      <a href="#news" class="btn btn-primary"><i class="fas fa-newspaper"></i> Читать новости</a>
+      <a href="#matches" class="btn btn-secondary"><i class="fas fa-calendar-alt"></i> Ближайшие матчи</a>
+    </div>
+  </div>
+</header>
+
+<div class="ticker" id="ticker">
+  <div class="ticker-inner">
+    <div class="ticker-label"><i class="fas fa-bolt"></i> Срочно</div>
+    <div class="ticker-wrap">
+      <div class="ticker-track" id="tickerTrack">
+        <span><strong>ESL Pro League S21:</strong> NAVI обыграли FaZe — 2:1</span>
+        <span><strong>IEM Chengdu 2025:</strong> Team Spirit выходят в плей-офф</span>
+        <span><strong>Обновление CS2:</strong> Новый кейс и правки карт</span>
+        <span><strong>BLAST Premier:</strong> Анонсирован новый сезон</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section" id="news">
+  <div class="section-header">
+    <h2><i class="fas fa-newspaper"></i> Последние новости</h2>
+    <a href="#" class="section-link">Все новости <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="filters" id="newsFilters">
+    <button class="filter-btn active" data-filter="all">Все</button>
+    <button class="filter-btn" data-filter="турниры">Турниры</button>
+    <button class="filter-btn" data-filter="обновления">Обновления</button>
+    <button class="filter-btn" data-filter="команды">Команды</button>
+    <button class="filter-btn" data-filter="интервью">Интервью</button>
+  </div>
+
+  <div class="news-grid">
+    <div class="featured-card fade-in" onclick="window.open(getFeaturedLink(), '_blank')">
+      <div class="card-img" style="background: linear-gradient(135deg, #ff6b35, #ff2d55);"></div>
+      <div class="card-body">
+        <span class="card-tag" id="featuredTag">Турниры</span>
+        <h3 id="featuredTitle">ESL Pro League Season 21: Итоги группового этапа</h3>
+        <div class="card-meta">
+          <span><i class="far fa-clock"></i> <span id="featuredDate">Сегодня</span></span>
+          <span><i class="far fa-eye"></i> 2,847 просмотров</span>
+        </div>
+      </div>
+    </div>
+    <div class="side-news" id="sideNews">
+      <div class="loader"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="matches">
+  <div class="section-header">
+    <h2><i class="fas fa-gamepad"></i> Ближайшие матчи</h2>
+    <a href="#" class="section-link">Все матчи <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="matches-grid" id="matchesGrid">
+    <div class="loader"><span></span><span></span><span></span></div>
+  </div>
+</section>
+
+<section class="section" id="teams">
+  <div class="section-header">
+    <h2><i class="fas fa-trophy"></i> Лучшие команды</h2>
+    <a href="#" class="section-link">Рейтинг команд <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="teams-grid" id="teamsGrid">
+    <div class="loader"><span></span><span></span><span></span></div>
+  </div>
+</section>
+
+<section class="section" id="newsSection">
+  <div class="section-header">
+    <h2><i class="fas fa-rss"></i> Ещё новости</h2>
+    <a href="#" class="section-link">Показать ещё <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="news-cards-grid" id="newsCardsGrid">
+    <div class="loader"><span></span><span></span><span></span></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <h3><i class="fas fa-crosshairs"></i> CS2 Insider</h3>
+      <p>Ваш главный источник свежих новостей о Counter-Strike 2 и киберспортивной сцене. Мы следим за всеми турнирами и событиями.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Разделы</h4>
+      <a href="#news">Новости</a>
+      <a href="#matches">Матчи</a>
+      <a href="#teams">Команды</a>
+      <a href="#">Турниры</a>
+    </div>
+    <div class="footer-col">
+      <h4>Ресурсы</h4>
+      <a href="#">О проекте</a>
+      <a href="#">Контакты</a>
+      <a href="#">Реклама</a>
+      <a href="#">Политика конфиденциальности</a>
+    </div>
+    <div class="footer-col">
+      <h4>Партнёры</h4>
+      <a href="#">HLTV.org</a>
+      <a href="#">Liquipedia</a>
+      <a href="#">ESL Gaming</a>
+      <a href="#">BLAST Premier</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2025 CS2 Insider. Все права защищены.</span>
+    <div class="footer-socials">
+      <a href="#"><i class="fab fa-telegram-plane"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-discord"></i></a>
+      <a href="#"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+</footer>
+
+<button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
+
+<script>
+// ===== DATA =====
+const cs2News = [
+  { tag:'Турниры', title:'ESL Pro League Season 21: NAVI выбивают G2 в полуфинале', date:'2 часа назад', views:'3,421', filter:'турниры', link:'#' },
+  { tag:'Обновления', title:'Valve выпустили патч 1.41 для CS2 — правки Inferno и M4A4', date:'5 часов назад', views:'8,932', filter:'обновления', link:'#' },
+  { tag:'Команды', title:'Team Spirit объявили об изменении состава перед IEM Cologne', date:'8 часов назад', views:'1,876', filter:'команды', link:'#' },
+  { tag:'Интервью', title:'Donk: "Мы показали лучший CS в своей карьере"', date:'12 часов назад', views:'5,234', filter:'интервью', link:'#' },
+  { tag:'Турниры', title:'BLAST Premier World Final 2025: Расписание матчей', date:'1 день назад', views:'2,109', filter:'турниры', link:'#' },
+  { tag:'Обновления', title:'Новый скин AWP | Fade появился в кейсе Revolution', date:'1 день назад', views:'12,450', filter:'обновления', link:'#' },
+  { tag:'Турниры', title:'IEM Chengdu 2025: Virtus.pro сенсационно вылетают', date:'1 день назад', views:'4,782', filter:'турниры', link:'#' },
+  { tag:'Команды', title:'FaZe Clan продлили контракт с ropz до 2027 года', date:'2 дня назад', views:'3,109', filter:'команды', link:'#' },
+  { tag:'Интервью', title:'s1mple: "Я ещё вернусь на про-сцену"', date:'2 дня назад', views:'9,876', filter:'интервью', link:'#' },
+  { tag:'Турниры', title:'PGL Major Antwerp 2025: Открытые квалификации анонсированы', date:'2 дня назад', views:'6,543', filter:'турниры', link:'#' },
+  { tag:'Обновления', title:'Анализ меты CS2: M4A4 vs M4A1-S в патче 1.41', date:'3 дня назад', views:'3,210', filter:'обновления', link:'#' },
+  { tag:'Команды', title:'MOUZ подписывают молодого игрока из академии', date:'3 дня назад', views:'1,543', filter:'команды', link:'#' },
+];
+
+const matches = [
+  { team1:'NAVI', team2:'Vitality', score:'2 : 1', league:'ESL Pro League S21', status:'Live', statusClass:'live' },
+  { team1:'FaZe', team2:'G2', score:'0 : 0', league:'ESL Pro League S21', status:'Сегодня 21:00', statusClass:'' },
+  { team1:'Team Spirit', team2:'MOUZ', score:'0 : 0', league:'IEM Chengdu 2025', status:'Завтра 18:30', statusClass:'' },
+  { team1:'Cloud9', team2:'Virtus.pro', score:'0 : 0', league:'CCT S3 Europe', status:'Завтра 16:00', statusClass:'' },
+  { team1:'Eternal Fire', team2:'HEROIC', score:'0 : 0', league:'ESL Challenger', status:'25 мая 20:00', statusClass:'' },
+  { team1:'Astralis', team2:'Liquid', score:'0 : 0', league:'BLAST Premier Fall', status:'26 мая 19:00', statusClass:'' },
+];
+
+const teams = [
+  { rank:'#1', name:'NAVI', country:'Украина', wins:'87%' },
+  { rank:'#2', name:'FaZe Clan', country:'Европа', wins:'84%' },
+  { rank:'#3', name:'Team Spirit', country:'Россия', wins:'82%' },
+  { rank:'#4', name:'Vitality', country:'Франция', wins:'79%' },
+  { rank:'#5', name:'G2 Esports', country:'Европа', wins:'76%' },
+  { rank:'#6', name:'MOUZ', country:'Европа', wins:'74%' },
+  { rank:'#7', name:'Virtus.pro', country:'Россия', wins:'71%' },
+  { rank:'#8', name:'Cloud9', country:'Россия', wins:'69%' },
+];
+
+const sideNews = cs2News.slice(1, 5);
+const featured = cs2News[0];
+const moreNews = cs2News.slice(5, 11);
+
+// ===== RENDER =====
+function renderFeatured() {
+  document.getElementById('featuredTag').textContent = featured.tag;
+  document.getElementById('featuredTitle').textContent = featured.title;
+  document.getElementById('featuredDate').textContent = featured.date;
+}
+window.getFeaturedLink = () => featured.link || '#';
+
+function renderSideNews() {
+  const container = document.getElementById('sideNews');
+  container.innerHTML = sideNews.map(n => `
+    <div class="side-news-item fade-in" onclick="window.open('${n.link || '#'}', '_blank')">
+      <div class="side-img" style="background: linear-gradient(135deg, var(--accent), var(--accent2));"></div>
+      <div class="side-content">
+        <div class="side-tag">${n.tag}</div>
+        <h4>${n.title}</h4>
+        <div class="side-meta"><i class="far fa-clock"></i> ${n.date} · ${n.views} просмотров</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderMatches() {
+  const container = document.getElementById('matchesGrid');
+  container.innerHTML = matches.map(m => `
+    <div class="match-card fade-in">
+      <div class="match-status ${m.statusClass}">${m.status === 'Live' ? '<i class="fas fa-circle"></i> LIVE' : m.status}</div>
+      <div class="match-teams">
+        <div class="match-team"><div class="team-icon">${m.team1[0]}</div>${m.team1}</div>
+        <div class="match-vs">VS</div>
+        <div class="match-team"><div class="team-icon">${m.team2[0]}</div>${m.team2}</div>
+      </div>
+      <div class="match-score"><strong>${m.score}</strong></div>
+      <div class="match-league">${m.league}</div>
+    </div>
+  `).join('');
+}
+
+function renderTeams() {
+  const container = document.getElementById('teamsGrid');
+  container.innerHTML = teams.map(t => `
+    <div class="team-card fade-in">
+      <div class="team-rank">${t.rank} в мире</div>
+      <div class="team-icon-lg">${t.name[0]}</div>
+      <h4>${t.name}</h4>
+      <div class="team-country">${t.country} · Побед: ${t.wins}</div>
+    </div>
+  `).join('');
+}
+
+function renderMoreNews(filter = 'all') {
+  const container = document.getElementById('newsCardsGrid');
+  const filtered = filter === 'all' ? moreNews : moreNews.filter(n => n.filter === filter);
+  if (filtered.length === 0) {
+    container.innerHTML = '<p style="color: var(--text2); grid-column: 1/-1; text-align: center;">Новости не найдены</p>';
+    return;
+  }
+  container.innerHTML = filtered.map(n => `
+    <div class="news-card-item fade-in" onclick="window.open('${n.link || '#'}', '_blank')">
+      <div class="nc-img" style="background: linear-gradient(135deg, var(--accent), var(--accent2));"></div>
+      <div class="nc-body">
+        <div class="nc-tag">${n.tag}</div>
+        <h4>${n.title}</h4>
+        <p>${n.title}. Подробнее читайте на нашем сайте.</p>
+        <div class="nc-meta">
+          <span><i class="far fa-clock"></i> ${n.date}</span>
+          <span><i class="far fa-eye"></i> ${n.views}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== FILTERS =====
+document.querySelectorAll('#newsFilters .filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#newsFilters .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderMoreNews(btn.dataset.filter);
+    observeAll();
+  });
+});
+
+// ===== MOBILE TOGGLE =====
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navbar').classList.toggle('nav-open');
+});
+
+// ===== SCROLL TOP =====
+const scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => {
+  scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+});
+scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// ===== OBSERVER =====
+function observeAll() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+}
+
+// ===== SEARCH =====
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  const q = e.target.value.toLowerCase();
+  const allNews = [...cs2News];
+  if (q.length < 2) { renderMoreNews('all'); observeAll(); return; }
+  const filtered = allNews.filter(n => n.title.toLowerCase().includes(q) || n.tag.toLowerCase().includes(q));
+  const container = document.getElementById('newsCardsGrid');
+  if (filtered.length === 0) {
+    container.innerHTML = '<p style="color: var(--text2); grid-column: 1/-1; text-align: center;">Ничего не найдено</p>';
+    return;
+  }
+  container.innerHTML = filtered.map(n => `
+    <div class="news-card-item fade-in">
+      <div class="nc-img" style="background: linear-gradient(135deg, var(--accent), var(--accent2));"></div>
+      <div class="nc-body">
+        <div class="nc-tag">${n.tag}</div>
+        <h4>${n.title}</h4>
+        <div class="nc-meta">
+          <span><i class="far fa-clock"></i> ${n.date}</span>
+          <span><i class="far fa-eye"></i> ${n.views}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  observeAll();
+});
+
+// ===== INIT =====
+renderFeatured();
+renderSideNews();
+renderMatches();
+renderTeams();
+renderMoreNews();
+observeAll();
+
+// ===== TICKER DUPLICATE (infinite scroll) =====
+const track = document.getElementById('tickerTrack');
+track.innerHTML = track.innerHTML + track.innerHTML;
+</script>
+</body>
+</html>

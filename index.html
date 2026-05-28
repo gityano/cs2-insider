@@ -88,8 +88,12 @@ nav {
 }
 .hero-bg {
   position: absolute; inset:0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%230a0a0f" width="1200" height="800"/><circle cx="200" cy="400" r="300" fill="%23ff6b35" opacity="0.06"/><circle cx="900" cy="300" r="250" fill="%2300d4ff" opacity="0.05"/><circle cx="600" cy="700" r="400" fill="%23ff2d55" opacity="0.04"/></svg>') center/cover no-repeat;
+  background: url('https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/730/library_hero.jpg') center/cover no-repeat;
   z-index:0;
+}
+.hero-bg::after {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(135deg, rgba(10,10,15,0.85) 0%, rgba(10,10,15,0.4) 50%, rgba(10,10,15,0.85) 100%);
 }
 .hero-overlay {
   position: absolute; inset:0;
@@ -221,13 +225,16 @@ nav {
 .featured-card:hover { transform: translateY(-4px); }
 .featured-card .card-img {
   width: 100%; height: 100%;
-  background: var(--gradient);
-  opacity: 0.3;
+  background-size: cover;
+  background-position: center;
   position: absolute; inset:0;
+  transition: transform 0.5s;
 }
-.featured-card .card-img img {
-  width: 100%; height: 100%; object-fit: cover;
-  mix-blend-mode: overlay;
+.featured-card:hover .card-img { transform: scale(1.05); }
+.featured-card .card-overlay {
+  position: absolute; inset:0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+  z-index:1;
 }
 .featured-card .card-body {
   position: absolute; bottom:0; left:0; right:0;
@@ -262,8 +269,8 @@ nav {
 .side-news-item:hover { background: var(--bg2); transform: translateX(-4px); }
 .side-news-item .side-img {
   width: 80px; height: 80px; border-radius: 8px; flex-shrink:0;
-  background: var(--gradient);
-  opacity: 0.3;
+  background-size: cover;
+  background-position: center;
 }
 .side-news-item .side-content { flex:1; min-width:0; }
 .side-news-item .side-tag {
@@ -382,11 +389,18 @@ nav {
   cursor: pointer;
 }
 .news-card-item:hover { transform: translateY(-4px); border-color: var(--accent); }
-.news-card-item .nc-img {
+.news-card-item .nc-img-wrap {
+  overflow: hidden;
   height: 180px;
-  background: var(--gradient);
-  opacity: 0.2;
 }
+.news-card-item .nc-img {
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.5s;
+}
+.news-card-item:hover .nc-img { transform: scale(1.05); }
+.news-card-item .nc-body { padding: 16px 20px 8px; cursor: pointer; }
 .news-card-item .nc-body { padding: 20px; }
 .news-card-item .nc-tag {
   font-size: 10px; font-weight: 700; text-transform: uppercase;
@@ -405,6 +419,48 @@ nav {
   font-size: 12px; color: var(--text2);
   display: flex; justify-content: space-between;
 }
+.nc-actions {
+  display: flex; gap: 8px; padding: 8px 20px 12px;
+  border-top: 1px solid var(--border);
+}
+.like-btn, .comment-toggle-btn {
+  background: none; border: none;
+  color: var(--text2); cursor: pointer;
+  font-size: 13px; display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 8px;
+  transition: all 0.3s;
+}
+.like-btn:hover, .comment-toggle-btn:hover { background: var(--bg2); color: var(--text); }
+.like-btn.liked { color: #ff2d55; }
+.like-btn.liked i { font-weight: 900; }
+.comments-section {
+  padding: 0 20px 16px;
+  border-top: 1px solid var(--border);
+}
+.comments-list { margin: 12px 0; max-height: 200px; overflow-y: auto; }
+.comment-item {
+  background: var(--bg2); border-radius: 8px;
+  padding: 10px 14px; margin-bottom: 8px;
+  font-size: 13px;
+}
+.comment-item strong { color: var(--accent); font-size: 12px; }
+.comment-item .comment-date { color: var(--text2); font-size: 11px; margin-left: 8px; }
+.comment-item p { color: var(--text); margin-top: 4px; font-size: 13px; }
+.comment-form { display: flex; gap: 8px; }
+.comment-form input {
+  flex: 1; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px;
+  color: var(--text); font-size: 13px; outline: none;
+  transition: border-color 0.3s;
+}
+.comment-form input:focus { border-color: var(--accent); }
+.comment-form button {
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 8px;
+  width: 40px; cursor: pointer;
+  transition: background 0.3s;
+}
+.comment-form button:hover { background: #e55a2b; }
 
 /* Footer */
 footer {
@@ -581,7 +637,8 @@ footer {
 
   <div class="news-grid">
     <div class="featured-card fade-in" onclick="window.open(getFeaturedLink(), '_blank')">
-      <div class="card-img" style="background: linear-gradient(135deg, #ff6b35, #ff2d55);"></div>
+      <div class="card-img" id="featuredImg" style="background-image: url('https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/730/header.jpg');"></div>
+      <div class="card-overlay"></div>
       <div class="card-body">
         <span class="card-tag" id="featuredTag">Турниры</span>
         <h3 id="featuredTitle">ESL Pro League Season 21: Итоги группового этапа</h3>
@@ -671,18 +728,18 @@ footer {
 <script>
 // ===== DATA =====
 const cs2News = [
-  { tag:'Турниры', title:'ESL Pro League Season 21: NAVI выбивают G2 в полуфинале', date:'2 часа назад', views:'3,421', filter:'турниры', link:'#' },
-  { tag:'Обновления', title:'Valve выпустили патч 1.41 для CS2 — правки Inferno и M4A4', date:'5 часов назад', views:'8,932', filter:'обновления', link:'#' },
-  { tag:'Команды', title:'Team Spirit объявили об изменении состава перед IEM Cologne', date:'8 часов назад', views:'1,876', filter:'команды', link:'#' },
-  { tag:'Интервью', title:'Donk: "Мы показали лучший CS в своей карьере"', date:'12 часов назад', views:'5,234', filter:'интервью', link:'#' },
-  { tag:'Турниры', title:'BLAST Premier World Final 2025: Расписание матчей', date:'1 день назад', views:'2,109', filter:'турниры', link:'#' },
-  { tag:'Обновления', title:'Новый скин AWP | Fade появился в кейсе Revolution', date:'1 день назад', views:'12,450', filter:'обновления', link:'#' },
-  { tag:'Турниры', title:'IEM Chengdu 2025: Virtus.pro сенсационно вылетают', date:'1 день назад', views:'4,782', filter:'турниры', link:'#' },
-  { tag:'Команды', title:'FaZe Clan продлили контракт с ropz до 2027 года', date:'2 дня назад', views:'3,109', filter:'команды', link:'#' },
-  { tag:'Интервью', title:'s1mple: "Я ещё вернусь на про-сцену"', date:'2 дня назад', views:'9,876', filter:'интервью', link:'#' },
-  { tag:'Турниры', title:'PGL Major Antwerp 2025: Открытые квалификации анонсированы', date:'2 дня назад', views:'6,543', filter:'турниры', link:'#' },
-  { tag:'Обновления', title:'Анализ меты CS2: M4A4 vs M4A1-S в патче 1.41', date:'3 дня назад', views:'3,210', filter:'обновления', link:'#' },
-  { tag:'Команды', title:'MOUZ подписывают молодого игрока из академии', date:'3 дня назад', views:'1,543', filter:'команды', link:'#' },
+  { tag:'Турниры', title:'ESL Pro League Season 21: NAVI выбивают G2 в полуфинале', date:'2 часа назад', views:'3,421', filter:'турниры', link:'#', img:'https://picsum.photos/seed/cs2t1/800/400' },
+  { tag:'Обновления', title:'Valve выпустили патч 1.41 для CS2 — правки Inferno и M4A4', date:'5 часов назад', views:'8,932', filter:'обновления', link:'#', img:'https://picsum.photos/seed/cs2upd/400/300' },
+  { tag:'Команды', title:'Team Spirit объявили об изменении состава перед IEM Cologne', date:'8 часов назад', views:'1,876', filter:'команды', link:'#', img:'https://picsum.photos/seed/cs2team1/400/300' },
+  { tag:'Интервью', title:'Donk: "Мы показали лучший CS в своей карьере"', date:'12 часов назад', views:'5,234', filter:'интервью', link:'#', img:'https://picsum.photos/seed/cs2int1/400/300' },
+  { tag:'Турниры', title:'BLAST Premier World Final 2025: Расписание матчей', date:'1 день назад', views:'2,109', filter:'турниры', link:'#', img:'https://picsum.photos/seed/cs2t2/400/300' },
+  { tag:'Обновления', title:'Новый скин AWP | Fade появился в кейсе Revolution', date:'1 день назад', views:'12,450', filter:'обновления', link:'#', img:'https://picsum.photos/seed/cs2skin/400/300' },
+  { tag:'Турниры', title:'IEM Chengdu 2025: Virtus.pro сенсационно вылетают', date:'1 день назад', views:'4,782', filter:'турниры', link:'#', img:'https://picsum.photos/seed/cs2t3/400/300' },
+  { tag:'Команды', title:'FaZe Clan продлили контракт с ropz до 2027 года', date:'2 дня назад', views:'3,109', filter:'команды', link:'#', img:'https://picsum.photos/seed/cs2team2/400/300' },
+  { tag:'Интервью', title:'s1mple: "Я ещё вернусь на про-сцену"', date:'2 дня назад', views:'9,876', filter:'интервью', link:'#', img:'https://picsum.photos/seed/cs2int2/400/300' },
+  { tag:'Турниры', title:'PGL Major Antwerp 2025: Открытые квалификации анонсированы', date:'2 дня назад', views:'6,543', filter:'турниры', link:'#', img:'https://picsum.photos/seed/cs2t4/400/300' },
+  { tag:'Обновления', title:'Анализ меты CS2: M4A4 vs M4A1-S в патче 1.41', date:'3 дня назад', views:'3,210', filter:'обновления', link:'#', img:'https://picsum.photos/seed/cs2meta/400/300' },
+  { tag:'Команды', title:'MOUZ подписывают молодого игрока из академии', date:'3 дня назад', views:'1,543', filter:'команды', link:'#', img:'https://picsum.photos/seed/cs2team3/400/300' },
 ];
 
 const matches = [
@@ -714,6 +771,7 @@ function renderFeatured() {
   document.getElementById('featuredTag').textContent = featured.tag;
   document.getElementById('featuredTitle').textContent = featured.title;
   document.getElementById('featuredDate').textContent = featured.date;
+  document.getElementById('featuredImg').style.backgroundImage = `url('${featured.img}')`;
 }
 window.getFeaturedLink = () => featured.link || '#';
 
@@ -721,7 +779,7 @@ function renderSideNews() {
   const container = document.getElementById('sideNews');
   container.innerHTML = sideNews.map(n => `
     <div class="side-news-item fade-in" onclick="window.open('${n.link || '#'}', '_blank')">
-      <div class="side-img" style="background: linear-gradient(135deg, var(--accent), var(--accent2));"></div>
+      <div class="side-img" style="background-image: url('${n.img}');"></div>
       <div class="side-content">
         <div class="side-tag">${n.tag}</div>
         <h4>${n.title}</h4>
@@ -759,6 +817,21 @@ function renderTeams() {
   `).join('');
 }
 
+function getLikes(id) { return JSON.parse(localStorage.getItem('cs2likes') || '{}')[id] || 0; }
+function setLikes(id, n) { const d = JSON.parse(localStorage.getItem('cs2likes') || '{}'); d[id] = n; localStorage.setItem('cs2likes', JSON.stringify(d)); }
+function toggleLike(id) { setLikes(id, getLikes(id) + (likedByUser(id) ? -1 : 1)); localStorage.setItem('cs2liked_' + id, likedByUser(id) ? '' : '1'); renderMoreNews(); renderSideNews(); }
+function likedByUser(id) { return localStorage.getItem('cs2liked_' + id) === '1'; }
+
+function getComments(id) { return JSON.parse(localStorage.getItem('cs2comments') || '{}')[id] || []; }
+function addComment(id, text) {
+  if (!text.trim()) return;
+  const d = JSON.parse(localStorage.getItem('cs2comments') || '{}');
+  if (!d[id]) d[id] = [];
+  d[id].push({ text: text.trim(), date: new Date().toLocaleString('ru-RU') });
+  localStorage.setItem('cs2comments', JSON.stringify(d));
+  renderMoreNews();
+}
+
 function renderMoreNews(filter = 'all') {
   const container = document.getElementById('newsCardsGrid');
   const filtered = filter === 'all' ? moreNews : moreNews.filter(n => n.filter === filter);
@@ -766,10 +839,17 @@ function renderMoreNews(filter = 'all') {
     container.innerHTML = '<p style="color: var(--text2); grid-column: 1/-1; text-align: center;">Новости не найдены</p>';
     return;
   }
-  container.innerHTML = filtered.map(n => `
-    <div class="news-card-item fade-in" onclick="window.open('${n.link || '#'}', '_blank')">
-      <div class="nc-img" style="background: linear-gradient(135deg, var(--accent), var(--accent2));"></div>
-      <div class="nc-body">
+  container.innerHTML = filtered.map((n, i) => {
+    const nid = 'news' + (cs2News.indexOf(n));
+    const likes = getLikes(nid);
+    const liked = likedByUser(nid);
+    const comments = getComments(nid);
+    return `
+    <div class="news-card-item fade-in">
+      <div class="nc-img-wrap" onclick="window.open('${n.link || '#'}', '_blank')">
+        <div class="nc-img" style="background-image: url('${n.img}');"></div>
+      </div>
+      <div class="nc-body" onclick="window.open('${n.link || '#'}', '_blank')">
         <div class="nc-tag">${n.tag}</div>
         <h4>${n.title}</h4>
         <p>${n.title}. Подробнее читайте на нашем сайте.</p>
@@ -778,8 +858,31 @@ function renderMoreNews(filter = 'all') {
           <span><i class="far fa-eye"></i> ${n.views}</span>
         </div>
       </div>
+      <div class="nc-actions">
+        <button class="like-btn ${liked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${nid}')">
+          <i class="fa${liked ? 's' : 'r'} fa-heart"></i> <span>${likes}</span>
+        </button>
+        <button class="comment-toggle-btn" onclick="event.stopPropagation(); toggleComments('${nid}')">
+          <i class="far fa-comment"></i> <span>${comments.length}</span>
+        </button>
+      </div>
+      <div class="comments-section" id="comments-${nid}" style="display:none;">
+        <div class="comments-list">
+          ${comments.map(c => `<div class="comment-item"><strong>Вы</strong> <span class="comment-date">${c.date}</span><p>${escHtml(c.text)}</p></div>`).join('')}
+        </div>
+        <form class="comment-form" onsubmit="event.preventDefault(); addComment('${nid}', this.querySelector('input').value); this.querySelector('input').value = '';">
+          <input type="text" placeholder="Написать комментарий..." required>
+          <button type="submit"><i class="fas fa-paper-plane"></i></button>
+        </form>
+      </div>
     </div>
-  `).join('');
+  `}).join('');
+}
+
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toggleComments(id) {
+  const el = document.getElementById('comments-' + id);
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
 // ===== FILTERS =====
@@ -828,9 +931,16 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
     container.innerHTML = '<p style="color: var(--text2); grid-column: 1/-1; text-align: center;">Ничего не найдено</p>';
     return;
   }
-  container.innerHTML = filtered.map(n => `
+  container.innerHTML = filtered.map((n) => {
+    const nid = 'news' + (cs2News.indexOf(n));
+    const likes = getLikes(nid);
+    const liked = likedByUser(nid);
+    const comments = getComments(nid);
+    return `
     <div class="news-card-item fade-in">
-      <div class="nc-img" style="background: linear-gradient(135deg, var(--accent), var(--accent2));"></div>
+      <div class="nc-img-wrap">
+        <div class="nc-img" style="background-image: url('${n.img}');"></div>
+      </div>
       <div class="nc-body">
         <div class="nc-tag">${n.tag}</div>
         <h4>${n.title}</h4>
@@ -839,8 +949,25 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
           <span><i class="far fa-eye"></i> ${n.views}</span>
         </div>
       </div>
+      <div class="nc-actions">
+        <button class="like-btn ${liked ? 'liked' : ''}" onclick="toggleLike('${nid}')">
+          <i class="fa${liked ? 's' : 'r'} fa-heart"></i> <span>${likes}</span>
+        </button>
+        <button class="comment-toggle-btn" onclick="toggleComments('${nid}')">
+          <i class="far fa-comment"></i> <span>${comments.length}</span>
+        </button>
+      </div>
+      <div class="comments-section" id="comments-${nid}" style="display:none;">
+        <div class="comments-list">
+          ${comments.map(c => `<div class="comment-item"><strong>Вы</strong> <span class="comment-date">${c.date}</span><p>${escHtml(c.text)}</p></div>`).join('')}
+        </div>
+        <form class="comment-form" onsubmit="event.preventDefault(); addComment('${nid}', this.querySelector('input').value); this.querySelector('input').value = '';">
+          <input type="text" placeholder="Написать комментарий..." required>
+          <button type="submit"><i class="fas fa-paper-plane"></i></button>
+        </form>
+      </div>
     </div>
-  `).join('');
+  `}).join('');
   observeAll();
 });
 
